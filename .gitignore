@@ -105,3 +105,4 @@ dist
 
 server/cc*
 server/.env
+server/config/id_rsa
