@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 import {
   Button,
   Heading,
@@ -7,13 +8,16 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  FormControl,
+  useToast,
 } from "@chakra-ui/react";
 
-const SignUp = () => {
+const SignUp = (props) => {
   const bg = useColorModeValue("gray.100", "gray.900");
 
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
+  const toast = useToast();
 
   const [state, setState] = useState({
     name: "",
@@ -30,15 +34,34 @@ const SignUp = () => {
   };
 
   const handleSubmit = async () => {
-    alert(password);
-    setState({
-      name: "",
-      username: "",
-      password: "",
-      email: "",
-      phone: "",
-      country: "",
-    });
+    if (!name || !username || !password || !email || !phone) {
+      toast({
+        position: "bottom-left",
+        title: "Missing Fields.",
+        description: "Please fill in all the data.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        position: "bottom-left",
+        title: "Account created.",
+        description: "We've created your account for you.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      setState({
+        name: "",
+        username: "",
+        password: "",
+        email: "",
+        phone: "",
+        country: "",
+      });
+      props.history.push("/");
+    }
   };
 
   const { name, username, password, email, phone } = state;
@@ -55,47 +78,59 @@ const SignUp = () => {
         justifyContent="space-between"
       >
         <Heading fontSize="2xl">Start Your Journey.</Heading>
-        <Input
-          placeholder="Name"
-          value={name}
-          name="username"
-          onChange={handleChange}
-        />
-        <Input
-          placeholder="Username"
-          value={username}
-          name="username"
-          onChange={handleChange}
-        />
-        <Input
-          placeholder="Email"
-          value={email}
-          name="email"
-          onChange={handleChange}
-        />
-        <Input
-          placeholder="Phone"
-          value={phone}
-          name="phone"
-          onChange={handleChange}
-        />
-
-        <InputGroup size="md">
+        <FormControl name="name" isRequired>
           <Input
-            pr="4.5rem"
-            type={show ? "text" : "password"}
-            placeholder="Enter password"
-            name="password"
+            placeholder="Name"
+            value={name}
+            name="name"
             onChange={handleChange}
-            value={password}
           />
-          <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
-              {show ? "Hide" : "Show"}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-        <Button colorScheme="green" onClick={handleSubmit}>
+        </FormControl>
+        <FormControl name="username" isRequired>
+          <Input
+            placeholder="Username"
+            value={username}
+            name="username"
+            onChange={handleChange}
+          />
+        </FormControl>
+        <FormControl name="email" isRequired>
+          <Input
+            placeholder="Email"
+            value={email}
+            name="email"
+            onChange={handleChange}
+          />
+        </FormControl>
+
+        <FormControl name="phone" isRequired>
+          <Input
+            placeholder="Phone"
+            value={phone}
+            name="phone"
+            onChange={handleChange}
+          />
+        </FormControl>
+
+        <FormControl name="password" isRequired>
+          <InputGroup size="md">
+            <Input
+              pr="4.5rem"
+              type={show ? "text" : "password"}
+              placeholder="Enter password"
+              name="password"
+              onChange={handleChange}
+              value={password}
+            />
+            <InputRightElement width="4.5rem">
+              <Button h="1.75rem" size="sm" onClick={handleClick}>
+                {show ? "Hide" : "Show"}
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+        </FormControl>
+
+        <Button colorScheme="green" type="submit" onClick={handleSubmit}>
           Submit
         </Button>
       </Flex>
@@ -103,4 +138,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default withRouter(SignUp);

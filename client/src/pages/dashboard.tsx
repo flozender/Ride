@@ -1,11 +1,9 @@
 import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 import {
   Heading,
   Flex,
-  Image,
-  useColorModeValue,
   Switch,
-  Box,
   Text,
   Select,
   Divider,
@@ -13,22 +11,52 @@ import {
   Button,
   PinInput,
   PinInputField,
+  Box,
+  useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
+
+import { states } from "../us-states";
 
 const Picker = ({ text }) => (
   <Flex flexDirection="column" alignItems="flex-start" mb={2}>
     <Heading mb={6}>{text}</Heading>
-    <Select width="15em" variant="filled" placeholder="Select" isRequired />
+    <Select width="15em" variant="filled" placeholder="Select" isRequired>
+      {states.map((e, i) => {
+        return (
+          <option key={i} value={e}>
+            {e}
+          </option>
+        );
+      })}
+    </Select>
   </Flex>
 );
 
-const Dashboard = ({ currentUser }) => {
+const Dashboard = (props: any) => {
   const bg = useColorModeValue("gray.100", "gray.900");
+  const { currentUser } = props;
   const [riding, setRiding] = useState(true);
+  const toast = useToast();
+
+  const EventToast = () => {
+    if (!riding) {
+      toast({
+        position: "bottom-left",
+        title: "Trip created.",
+        description: "We've created your trip for you.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    riding ? props.history.push("/trips") : props.history.push("/");
+  };
+
   return (
     <Flex
       height="80vh"
-      width="85vw"
+      width="75vw"
       mt={8}
       p={8}
       margin="auto"
@@ -66,7 +94,7 @@ const Dashboard = ({ currentUser }) => {
         rounded="lg"
         p={10}
         flexDirection="column"
-        width="80%"
+        width="95%"
         marginLeft="auto"
         marginRight="auto"
       >
@@ -103,7 +131,12 @@ const Dashboard = ({ currentUser }) => {
           </Heading>
           <Input isRequired width="12em" type="date" mb={6} />
         </Flex>
-        <Button width="10em" colorScheme="green" alignSelf="center">
+        <Button
+          width="10em"
+          colorScheme="green"
+          alignSelf="center"
+          onClick={() => EventToast()}
+        >
           {riding ? "GO" : "HOST"}
         </Button>
       </Flex>
@@ -111,4 +144,4 @@ const Dashboard = ({ currentUser }) => {
   );
 };
 
-export default Dashboard;
+export default withRouter(Dashboard);

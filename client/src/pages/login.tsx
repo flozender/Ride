@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 import {
   Button,
   Heading,
@@ -7,9 +8,10 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  useToast,
 } from "@chakra-ui/react";
 
-const Login = () => {
+const Login = (props) => {
   const bg = useColorModeValue("gray.100", "gray.900");
 
   const [state, setState] = useState({
@@ -19,15 +21,36 @@ const Login = () => {
 
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
+  const toast = useToast();
 
   const handleChange = (event: any) => {
     const { value, name } = event.target;
 
     setState({ ...state, [name]: value });
   };
-  const handleSubmit = async (event: any) => {
-    alert(password);
-    setState({ username: "", password: "" });
+  const handleSubmit = async () => {
+    if (!username || !password) {
+      toast({
+        position: "bottom-left",
+        title: "Missing Fields.",
+        description: "Please fill in all the data.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        position: "bottom-left",
+        title: "Success",
+        description: "Welcome back.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      setState({ username: "", password: "" });
+
+      props.history.push("/");
+    }
   };
 
   const { username, password } = state;
@@ -75,4 +98,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default withRouter(Login);
