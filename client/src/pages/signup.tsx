@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
+import fetch from "node-fetch";
 import {
   Button,
   Heading,
@@ -12,20 +13,19 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-const SignUp = (props) => {
+const SignUp = (props: any) => {
   const bg = useColorModeValue("gray.100", "gray.900");
 
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
   const toast = useToast();
-
+  const { setCurrentUser } = props;
   const [state, setState] = useState({
     name: "",
     username: "",
     password: "",
     email: "",
     phone: "",
-    country: "",
   });
 
   const handleChange = (event: any) => {
@@ -34,33 +34,57 @@ const SignUp = (props) => {
   };
 
   const handleSubmit = async () => {
-    if (!name || !username || !password || !email || !phone) {
+    const success = () => {
       toast({
         position: "bottom-left",
-        title: "Missing Fields.",
-        description: "Please fill in all the data.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        position: "bottom-left",
-        title: "Account created.",
+        title: "Account created",
         description: "We've created your account for you.",
         status: "success",
         duration: 9000,
         isClosable: true,
       });
-      setState({
-        name: "",
-        username: "",
-        password: "",
-        email: "",
-        phone: "",
-        country: "",
-      });
       props.history.push("/");
+    };
+
+    if (!name || !username || !password || !email || !phone) {
+      toast({
+        position: "bottom-left",
+        title: "Missing Fields",
+        description: "Please fill in all the data.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      const body = state;
+
+      fetch("/signUp", {
+        method: "post",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (!json.success) throw Error(json.message);
+          setCurrentUser({
+            ...json,
+          });
+          localStorage.setItem("ride-user", JSON.stringify(json));
+          success();
+        })
+        .catch((err) => {
+          console.log(err);
+          toast({
+            position: "bottom-left",
+            title: "Sign Up Failed",
+            description: err.message,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        });
     }
   };
 

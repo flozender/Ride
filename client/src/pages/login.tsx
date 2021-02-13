@@ -11,7 +11,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-const Login = (props) => {
+const Login = (props: any) => {
   const bg = useColorModeValue("gray.100", "gray.900");
 
   const [state, setState] = useState({
@@ -22,13 +22,28 @@ const Login = (props) => {
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
   const toast = useToast();
+  const { setCurrentUser } = props;
 
   const handleChange = (event: any) => {
     const { value, name } = event.target;
 
     setState({ ...state, [name]: value });
   };
+
   const handleSubmit = async () => {
+    const success = () => {
+      toast({
+        position: "bottom-left",
+        title: "Success",
+        description: "Welcome back.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+
+      props.history.push("/");
+    };
+
     if (!username || !password) {
       toast({
         position: "bottom-left",
@@ -39,17 +54,34 @@ const Login = (props) => {
         isClosable: true,
       });
     } else {
-      toast({
-        position: "bottom-left",
-        title: "Success",
-        description: "Welcome back.",
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-      });
-      setState({ username: "", password: "" });
-
-      props.history.push("/");
+      const body = state;
+      fetch("/signIn", {
+        method: "post",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (!json.success) throw Error(json.message);
+          setCurrentUser({
+            ...json,
+          });
+          localStorage.setItem("ride-user", JSON.stringify(json));
+          success();
+        })
+        .catch((err) => {
+          console.log(err);
+          toast({
+            position: "bottom-left",
+            title: "Could not log you in",
+            description: err.message,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        });
     }
   };
 
