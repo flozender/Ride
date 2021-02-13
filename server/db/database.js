@@ -5,10 +5,10 @@ const config = {
   user: "tayeeb",
   host: "free-tier.gcp-us-central1.cockroachlabs.cloud",
   database: "pesky-marmot-661.defaultdb",
-  password: process.env.DB_PASSWORD,
+  password: 'L7ObQnJoUsNfdZsd',
   port: 26257,
   ssl: {
-    ca: fs.readFileSync("./cc-ca.crt").toString(),
+    ca: fs.readFileSync('config/cc-ca.crt').toString(),
   },
 };
 
