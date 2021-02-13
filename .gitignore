@@ -107,3 +107,4 @@ server/cc*
 server/.env
 server/config
 server/yarn.lock
+client/yarn.lock
