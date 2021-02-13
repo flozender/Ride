@@ -11,21 +11,26 @@ import {
   Spacer,
   Text,
   Divider,
+  Input,
+  InputGroup,
+  InputLeftElement,
 } from "@chakra-ui/react";
 import { EmailIcon, PhoneIcon, AtSignIcon } from "@chakra-ui/icons";
 
 const DataBox = ({ text, Icon }) => (
   <Flex
     alignSelf="center"
-    mt={10}
+    mb={10}
     width="90%"
     justifyContent="flex-start"
     alignItems="center"
   >
-    {Icon}
-    <Text ml={6} fontSize="xl">
-      {text}
-    </Text>
+    {/* {Icon} */}
+    {/* <Input ml={6} fontSize="xl" value={text} variant="filled" /> */}
+    <InputGroup>
+      <InputLeftElement pointerEvents="none" children={Icon} />
+      <Input type="tel" value={text} variant="filled" />
+    </InputGroup>
   </Flex>
 );
 
@@ -42,7 +47,7 @@ const Profile = ({ currentUser }) => {
         bgColor={bg}
         borderRadius="md"
         flexDirection="column"
-        height="55vh"
+        height="65vh"
         width="30vw"
         justifyContent="flex-start"
       >
@@ -52,13 +57,14 @@ const Profile = ({ currentUser }) => {
           </Avatar>
           <Heading size="lg">{currentUser.name}</Heading>
         </Flex>
-        <Divider />
+        <Divider mb={10} />
         <DataBox
           text={currentUser.username}
-          Icon={<AtSignIcon w={6} h={6} />}
+          Icon={<AtSignIcon w={6} h={6} color="gray.300" />}
         />
         <DataBox text={currentUser.email} Icon={<EmailIcon w={6} h={6} />} />
         <DataBox text={currentUser.phone} Icon={<PhoneIcon w={6} h={6} />} />
+        <Button colorScheme="green">Update</Button>
       </Flex>
     </Flex>
   );

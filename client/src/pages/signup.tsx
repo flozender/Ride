@@ -5,10 +5,15 @@ import {
   Flex,
   useColorModeValue,
   Input,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 
 const SignUp = () => {
   const bg = useColorModeValue("gray.100", "gray.900");
+
+  const [show, setShow] = React.useState(false);
+  const handleClick = () => setShow(!show);
 
   const [state, setState] = useState({
     name: "",
@@ -75,14 +80,24 @@ const SignUp = () => {
           onChange={handleChange}
         />
 
-        <Input
-          placeholder="Password"
-          value={password}
-          type="password"
-          name="password"
-          onChange={handleChange}
-        />
-        <Button onClick={handleSubmit}> Submit </Button>
+        <InputGroup size="md">
+          <Input
+            pr="4.5rem"
+            type={show ? "text" : "password"}
+            placeholder="Enter password"
+            name="password"
+            onChange={handleChange}
+            value={password}
+          />
+          <InputRightElement width="4.5rem">
+            <Button h="1.75rem" size="sm" onClick={handleClick}>
+              {show ? "Hide" : "Show"}
+            </Button>
+          </InputRightElement>
+        </InputGroup>
+        <Button colorScheme="green" onClick={handleSubmit}>
+          Submit
+        </Button>
       </Flex>
     </Flex>
   );
