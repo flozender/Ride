@@ -50,3 +50,15 @@ exports.verifyAndAuthorize = async (data) => {
     throw err;
   }
 }
+exports.getProfile = async (username) => {
+  try {
+    let query = `SELECT U.id, U.username, U.email, U.name, U.phone FROM users U WHERE U.username=$1`;
+    let user = await db.query(query, [username]);
+    return {
+      data: user.rows[0]
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
