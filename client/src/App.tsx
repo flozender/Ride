@@ -9,13 +9,14 @@ import {
   extendTheme,
 } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
-import { Route, Switch, Redirect, withRouter } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 
 // Page imports
 import Login from "./pages/login";
 import SignUp from "./pages/signup";
 import Splash from "./pages/splash";
 import Profile from "./pages/profile";
+import Dashboard from "./pages/dashboard";
 
 // Component imports
 import Fonts from "./components/Fonts";
@@ -27,7 +28,7 @@ const Nav = ({ history, currentUser }) => {
       <Box>
         <Heading
           onClick={() => history.push("/dashboard")}
-          size="xl"
+          size="2xl"
           fontFamily="Allan"
           cursor="pointer"
           textShadow="3px 1px green"
@@ -116,7 +117,7 @@ const App = (props: any) => {
           <ResRoute
             path="/dashboard"
             currentUser={currentUser}
-            component={<></>}
+            component={<Dashboard currentUser={currentUser} />}
           />
           <ResRoute
             path="/profile"

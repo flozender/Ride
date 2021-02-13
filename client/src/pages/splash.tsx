@@ -16,7 +16,7 @@ const Splash = () => {
         position="absolute"
         top="33vh"
         left="28vw"
-        textShadow="3px 1px green"
+        textShadow="4px 2px green"
         fontFamily="Allan"
         transform="rotate(-10deg)"
         color="#D3FFDE"
