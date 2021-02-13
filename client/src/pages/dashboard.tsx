@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
+import fetch from "node-fetch";
 import {
   Heading,
   Flex,
@@ -18,10 +19,17 @@ import {
 
 import { states } from "../us-states";
 
-const Picker = ({ text }) => (
+const Picker = ({ text, name, onChange }) => (
   <Flex flexDirection="column" alignItems="flex-start" mb={2}>
     <Heading mb={6}>{text}</Heading>
-    <Select width="15em" variant="filled" placeholder="Select" isRequired>
+    <Select
+      width="15em"
+      variant="filled"
+      placeholder="Select"
+      isRequired
+      name={name}
+      onChange={onChange}
+    >
       {states.map((e, i) => {
         return (
           <option key={i} value={e}>
@@ -37,22 +45,63 @@ const Dashboard = (props: any) => {
   const bg = useColorModeValue("gray.100", "gray.900");
   const { currentUser } = props;
   const [riding, setRiding] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState({
+    origin: "",
+    destination: "",
+    when: "",
+    capacity: 0,
+  });
   const toast = useToast();
 
-  const EventToast = () => {
+  const handleSubmit = () => {
+    setLoading(true);
+    state.when = state.when + " 23:59:59";
     if (!riding) {
-      toast({
-        position: "bottom-left",
-        title: "Trip created.",
-        description: "We've created your trip for you.",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
+      fetch(`/trip`, {
+        method: "post",
+        body: JSON.stringify(state),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${currentUser.token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (!json.success) throw Error(json.message);
+          setLoading(false);
+          toast({
+            position: "bottom-left",
+            title: "Trip created.",
+            description: "We've created your trip for you.",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+          props.history.push("/");
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+          toast({
+            position: "bottom-left",
+            title: "Failed to create trip",
+            description: err.message,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        });
     }
-    riding ? props.history.push("/trips") : props.history.push("/");
   };
 
+  const handleChange = (event: any) => {
+    const { value, name } = event.target;
+
+    setState({ ...state, [name]: value });
+  };
+
+  const { capacity } = state;
   return (
     <Flex
       height="80vh"
@@ -99,9 +148,13 @@ const Dashboard = (props: any) => {
         marginRight="auto"
       >
         <Flex justifyContent="space-between" width="100%" mb={8}>
-          <Picker text="Origin" />
+          <Picker text="Origin" name="origin" onChange={handleChange} />
           <Divider orientation="vertical" />
-          <Picker text="Destination" />
+          <Picker
+            text="Destination"
+            name="destination"
+            onChange={handleChange}
+          />
         </Flex>
         {/* Bottom Flex */}
         {/* Capacity */}
@@ -118,7 +171,12 @@ const Dashboard = (props: any) => {
             >
               <Heading mr={10}>Seats </Heading>
               <PinInput>
-                <PinInputField variant="filled" />
+                <PinInputField
+                  variant="filled"
+                  value={capacity}
+                  name="capacity"
+                  onChange={handleChange}
+                />
               </PinInput>
             </Flex>
           </>
@@ -129,13 +187,21 @@ const Dashboard = (props: any) => {
           <Heading mb={6} mr={7}>
             When
           </Heading>
-          <Input isRequired width="12em" type="date" mb={6} />
+          <Input
+            isRequired
+            width="12em"
+            type="date"
+            mb={6}
+            name="when"
+            onChange={handleChange}
+          />
         </Flex>
         <Button
           width="10em"
           colorScheme="green"
           alignSelf="center"
-          onClick={() => EventToast()}
+          onClick={() => handleSubmit()}
+          isLoading={loading}
         >
           {riding ? "GO" : "HOST"}
         </Button>

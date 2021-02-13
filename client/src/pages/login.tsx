@@ -51,10 +51,11 @@ const Login = (props: any) => {
         position: "bottom-left",
         title: "Missing Fields.",
         description: "Please fill in all the data.",
-        status: "error",
+        status: "warning",
         duration: 3000,
         isClosable: true,
       });
+      setLoading(false);
     } else {
       const body = state;
       fetch("/signIn", {
