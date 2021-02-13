@@ -9,6 +9,7 @@ module.exports = (app) => {
         success: true,
         message: 'Logged In Successfully',
         username: data.username,
+        id: data.id,
         name: data.name,
         token: data.token
       })

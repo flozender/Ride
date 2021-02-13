@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "client": "cd client && yarn start",
-    "server": "cd server && yarn start",
+    "server": "cd server && nodemon",
     "dev": "yarn client & yarn server"
   }
 }

@@ -10,6 +10,7 @@ exports.addToken = async (user) => {
     return {
       success: true,
       username: user.username,
+      id: user.id,
       name: user.name,
       token
     }
