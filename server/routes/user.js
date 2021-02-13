@@ -3,55 +3,68 @@ module.exports = (app) => {
   const userController = require('../controllers/user.js');
 
   app.post('/signUp', async (req, res) => {
-    let body = Object.assign({}, req.body);
+    try {
+      let body = Object.assign({}, req.body);
 
-    let data = await userController.createUser(body);
-    if (data && data.success) {
-      res.send({
-        success: true,
-        message: 'Logged In Successfully',
-        username: data.username,
-        id: data.id,
-        name: data.name,
-        token: data.token
-      })
-    } else {
-      res.send({
-        success: false,
-        message: data.message
-      })
+      let data = await userController.createUser(body);
+      if (data && data.success) {
+        res.send({
+          success: true,
+          message: 'Logged In Successfully',
+          username: data.username,
+          id: data.id,
+          name: data.name,
+          token: data.token
+        })
+      } else {
+        res.send({
+          success: false,
+          message: data.message
+        })
+      }
+    } catch (e) {
+      throw e;
     }
+
   })
 
   app.post('/signIn', async (req, res) => {
-    let body = Object.assign({}, req.body);
-    body.username = body.username || null;
-    body.email = body.email || null;
+    try {
+      let body = Object.assign({}, req.body);
+      body.username = body.username || null;
+      body.email = body.email || null;
 
-    let data = await userController.verifyAndAuthorize(body);
-    if (data && data.success) {
-      res.send({
-        success: true,
-        message: 'Logged In Successfully',
-        username: data.username,
-        id: data.id,
-        name: data.name,
-        token: data.token
-      })
-    } else {
-      res.send({
-        success: false,
-        message: data.message
-      })
+      let data = await userController.verifyAndAuthorize(body);
+      if (data && data.success) {
+        res.send({
+          success: true,
+          message: 'Logged In Successfully',
+          username: data.username,
+          id: data.id,
+          name: data.name,
+          token: data.token
+        })
+      } else {
+        res.send({
+          success: false,
+          message: data.message
+        })
+      }
+    } catch (e) {
+      throw e;
     }
   })
 
   app.get('/profile/:username', async (req, res) => {
-    let data = await userController.getProfile(req.params.username);
-    res.send({
-      success: true,
-      profileData: data.data
-    })
+    try {
+      let data = await userController.getProfile(req.params.username);
+      res.send({
+        success: true,
+        profileData: data.data
+      })
+    } catch (e) {
+      throw e;
+    }
   })
 
   app.use('/', autho.tokenValidate);

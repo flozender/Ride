@@ -8,5 +8,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 
 require('./routes/user.js')(app);
+require('./routes/host.js')(app);
 
 app.listen(5000,()=>console.log('Server @ port 5000'));
