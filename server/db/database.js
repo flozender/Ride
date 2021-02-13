@@ -1,5 +1,6 @@
 const fs = require("fs");
 const pg = require("pg");
+require("dotenv").config();
 
 const config = {
   user: "tayeeb",
@@ -8,7 +9,7 @@ const config = {
   password: process.env.DB_PASSWORD,
   port: 26257,
   ssl: {
-    ca: fs.readFileSync("./cc-ca.crt").toString(),
+    ca: fs.readFileSync('config/cc-ca.crt').toString(),
   },
 };
 
