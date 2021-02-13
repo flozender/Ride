@@ -15,6 +15,8 @@ import {
   Box,
   useColorModeValue,
   useToast,
+  FormControl,
+  FormLabel,
 } from "@chakra-ui/react";
 
 import { states } from "../us-states";
@@ -50,7 +52,7 @@ const Dashboard = (props: any) => {
     origin: "",
     destination: "",
     when: "",
-    capacity: 0,
+    capacity: "",
   });
   const toast = useToast();
 
@@ -58,6 +60,8 @@ const Dashboard = (props: any) => {
     setLoading(true);
     state.when = state.when + " 23:59:59";
     if (!riding) {
+      const { when, origin, destination, capacity } = state;
+      if (!when || !origin || !destination || !capacity) return;
       fetch(`/trip`, {
         method: "post",
         body: JSON.stringify(state),
@@ -92,6 +96,17 @@ const Dashboard = (props: any) => {
             isClosable: true,
           });
         });
+    } else {
+      // Riding
+      toast({
+        position: "bottom-left",
+        title: "Oops.",
+        description: "Not working yet D:",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      setLoading(false);
     }
   };
 
@@ -124,16 +139,18 @@ const Dashboard = (props: any) => {
           Good Evening, {currentUser.name}.
         </Heading>
         <Flex alignItems="center">
-          <Text fontSize="2xl">{riding ? "Riding" : "Hosting"}</Text>
-          <Switch
-            name="riding"
-            defaultChecked={riding}
-            colorScheme="green"
-            size="lg"
-            alignSelf="flex-end"
-            ml={5}
-            onChange={() => setRiding(!riding)}
-          />
+          <FormControl display="flex" alignItems="center">
+            <FormLabel htmlFor="riding" mb="0">
+              {riding ? "Riding" : "Hosting"}
+            </FormLabel>
+            <Switch
+              name="riding"
+              defaultChecked={riding}
+              colorScheme="green"
+              size="lg"
+              onChange={() => setRiding(!riding)}
+            />
+          </FormControl>
         </Flex>
       </Flex>
       {/* Data Card */}
