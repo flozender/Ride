@@ -9,6 +9,8 @@ exports.addToken = async (user) => {
     let token = jwt.sign(user, key.toString());
     return {
       success: true,
+      username: user.username,
+      name: user.name,
       token
     }
   } catch (err) {

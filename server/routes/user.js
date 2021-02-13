@@ -6,8 +6,10 @@ module.exports = (app) => {
     let data = await userController.createUser(body);
     if (data && data.token) {
       res.send({
-        succes: true,
+        success: true,
         message: 'Logged In Successfully',
+        username: data.username,
+        name: data.name,
         token: data.token
       })
     }
