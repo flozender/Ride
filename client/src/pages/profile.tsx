@@ -4,12 +4,8 @@ import {
   Heading,
   Flex,
   useColorModeValue,
-  Image,
   Avatar,
   AvatarBadge,
-  Box,
-  Spacer,
-  Text,
   Divider,
   Input,
   InputGroup,
@@ -25,8 +21,6 @@ const DataBox = ({ text, Icon }) => (
     justifyContent="flex-start"
     alignItems="center"
   >
-    {/* {Icon} */}
-    {/* <Input ml={6} fontSize="xl" value={text} variant="filled" /> */}
     <InputGroup>
       <InputLeftElement pointerEvents="none" children={Icon} />
       <Input type="tel" value={text} variant="filled" />

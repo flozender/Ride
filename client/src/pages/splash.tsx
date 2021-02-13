@@ -1,5 +1,5 @@
 import React from "react";
-import { Heading, Flex, Image } from "@chakra-ui/react";
+import { Heading, Flex, Image, Link } from "@chakra-ui/react";
 import Screen from "../assets/green.png";
 
 const Splash = () => {
@@ -21,7 +21,7 @@ const Splash = () => {
         transform="rotate(-10deg)"
         color="#D3FFDE"
       >
-        POOLING MADE EASY!
+        <Link href="/dashboard">POOLING MADE EASY!</Link>
       </Heading>
     </Flex>
   );
