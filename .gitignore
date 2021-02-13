@@ -106,3 +106,5 @@ dist
 server/cc*
 server/.env
 server/config/id_rsa
+server/yarn.lock
+client/yarn.lock
