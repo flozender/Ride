@@ -32,3 +32,21 @@ exports.createUser = async (data) => {
     throw err;
   }
 }
+exports.verifyAndAuthorize = async (data) => {
+  try {
+    let condition = data.username ? ` U.username=$1` : ` U.email=$1`
+    let query = `SELECT U.id, U.username, U.name FROM users U WHERE${condition} AND U.password=$2`
+    let user = await db.query(query, [data.username || data.email, data.password]);
+    if (user.rows && user.rows.length) {
+      return util.addToken({ id: user.rows[0].id, name: user.rows[0].name, username: user.rows[0].username });
+    } else {
+      return {
+        success: false,
+        message: "Not Authorized"
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
