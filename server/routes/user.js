@@ -22,8 +22,10 @@ module.exports = (app) => {
           message: data.message
         })
       }
-    } catch (e) {
-      throw e;
+    } catch (error) {
+      res.status(400).send({
+        error: JSON.stringify(error)
+      });
     }
 
   })
@@ -50,8 +52,10 @@ module.exports = (app) => {
           message: data.message
         })
       }
-    } catch (e) {
-      throw e;
+    } catch (error) {
+      res.status(400).send({
+        error: JSON.stringify(error)
+      });
     }
   })
 
@@ -62,8 +66,10 @@ module.exports = (app) => {
         success: true,
         profileData: data.data
       })
-    } catch (e) {
-      throw e;
+    } catch (error) {
+      res.status(400).send({
+        error: JSON.stringify(error)
+      });
     }
   })
 

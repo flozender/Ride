@@ -11,8 +11,23 @@ module.exports = (app) => {
 
       let data = await hostController.createTrip(body);
       res.send(data);
-    } catch (e) {
-      throw e;
+    } catch (error) {
+      res.status(400).send({
+        error: JSON.stringify(error)
+      });
+    }
+  })
+
+  app.get('/host/trips', async (req, res) => {
+    try {
+      let username = req.token_data.data.username;
+
+      let data = await hostController.getAllTripsOfUser(username);
+      res.send(data)
+    } catch (error) {
+      res.status(400).send({
+        error: JSON.stringify(error)
+      });
     }
   })
 
