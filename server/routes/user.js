@@ -1,3 +1,4 @@
+let autho = require('../middleware/auth');
 module.exports = (app) => {
   const userController = require('../controllers/user.js');
 
@@ -44,4 +45,14 @@ module.exports = (app) => {
       })
     }
   })
+
+  app.get('/profile/:username', async (req, res) => {
+    let data = await userController.getProfile(req.params.username);
+    res.send({
+      success: true,
+      profileData: data.data
+    })
+  })
+
+  app.use('/', autho.tokenValidate);
 }
