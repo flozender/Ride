@@ -19,7 +19,8 @@ const Login = (props: any) => {
     password: "",
   });
 
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
   const handleClick = () => setShow(!show);
   const toast = useToast();
   const { setCurrentUser } = props;
@@ -31,7 +32,9 @@ const Login = (props: any) => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     const success = () => {
+      setLoading(false);
       toast({
         position: "bottom-left",
         title: "Success",
@@ -40,7 +43,6 @@ const Login = (props: any) => {
         duration: 9000,
         isClosable: true,
       });
-
       props.history.push("/");
     };
 
@@ -81,6 +83,7 @@ const Login = (props: any) => {
             duration: 3000,
             isClosable: true,
           });
+          setLoading(false);
         });
     }
   };
@@ -122,7 +125,12 @@ const Login = (props: any) => {
             </Button>
           </InputRightElement>
         </InputGroup>
-        <Button colorScheme="green" onClick={handleSubmit}>
+        <Button
+          colorScheme="green"
+          onClick={handleSubmit}
+          isLoading={loading ? true : false}
+          loadingText="Submitting"
+        >
           Submit
         </Button>
       </Flex>

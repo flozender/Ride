@@ -18,6 +18,7 @@ const SignUp = (props: any) => {
 
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
+  const [loading, setLoading] = useState(false);
   const toast = useToast();
   const { setCurrentUser } = props;
   const [state, setState] = useState({
@@ -34,7 +35,11 @@ const SignUp = (props: any) => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
+
     const success = () => {
+      setLoading(false);
+
       toast({
         position: "bottom-left",
         title: "Account created",
@@ -84,6 +89,7 @@ const SignUp = (props: any) => {
             duration: 3000,
             isClosable: true,
           });
+          setLoading(false);
         });
     }
   };

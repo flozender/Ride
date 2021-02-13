@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import fetch from "node-fetch";
+import { withRouter } from "react-router-dom";
 import {
   Button,
   Heading,
@@ -10,6 +12,8 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { EmailIcon, PhoneIcon, AtSignIcon } from "@chakra-ui/icons";
 
@@ -28,10 +32,41 @@ const DataBox = ({ text, Icon }) => (
   </Flex>
 );
 
-const Profile = ({ currentUser }) => {
-  currentUser.email = "tayeeb.hasan@gmail.com";
-  currentUser.phone = "9999999";
+const Profile = (props: any) => {
   const bg = useColorModeValue("gray.100", "gray.900");
+  const toast = useToast();
+  const [loading, setLoading] = useState(true);
+  const [state, setState] = useState(null);
+  const { currentUser, history } = props;
+  useEffect(() => {
+    fetch(`/profile/${currentUser.username}`, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (!json.success) throw Error(json.message);
+        setState({ ...json.profileData });
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast({
+          position: "bottom-left",
+          title: "Failed to load info",
+          description: err.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        history.push("/");
+      });
+  }, [currentUser, history, toast]);
+  if (loading)
+    return <Spinner position="relative" top="30vh" size="xl" color="green" />;
+  const { name, username, phone, email } = state;
   return (
     <Flex justifyContent="center" alignItems="center" height="75vh">
       <Flex
@@ -46,22 +81,22 @@ const Profile = ({ currentUser }) => {
         justifyContent="flex-start"
       >
         <Flex flexDirection="row" alignItems="center" mb={5}>
-          <Avatar size="lg" name={currentUser.name} mr={12}>
+          <Avatar size="lg" name={name} mr={12}>
             <AvatarBadge boxSize="1em" bg="green.600" />
           </Avatar>
-          <Heading size="lg">{currentUser.name}</Heading>
+          <Heading size="lg">{name}</Heading>
         </Flex>
         <Divider mb={10} />
         <DataBox
-          text={currentUser.username}
+          text={username}
           Icon={<AtSignIcon w={6} h={6} color="gray.300" />}
         />
-        <DataBox text={currentUser.email} Icon={<EmailIcon w={6} h={6} />} />
-        <DataBox text={currentUser.phone} Icon={<PhoneIcon w={6} h={6} />} />
+        <DataBox text={email} Icon={<EmailIcon w={6} h={6} />} />
+        <DataBox text={phone} Icon={<PhoneIcon w={6} h={6} />} />
         <Button colorScheme="green">Update</Button>
       </Flex>
     </Flex>
   );
 };
 
-export default Profile;
+export default withRouter(Profile);

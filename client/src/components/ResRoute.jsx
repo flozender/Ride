@@ -6,7 +6,7 @@ const ResRoute = ({ currentUser, path, component }) => {
     <Route
       exact
       path={path}
-      render={() => (!currentUser ? <Redirect to="/" /> : component)}
+      render={() => (!currentUser ? <Redirect to="/login" /> : component)}
     />
   );
 };

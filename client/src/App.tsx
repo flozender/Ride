@@ -103,7 +103,7 @@ const Nav = ({ history, currentUser }) => {
     <Flex>
       <Box>
         <Heading
-          onClick={() => history.push("/dashboard")}
+          onClick={() => history.push("/")}
           size="2xl"
           fontFamily="Allan"
           cursor="pointer"
