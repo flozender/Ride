@@ -15,16 +15,18 @@ import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 import Login from "./pages/login";
 import SignUp from "./pages/signup";
 import Splash from "./pages/splash";
+import Profile from "./pages/profile";
 
 // Component imports
 import Fonts from "./components/Fonts";
+import ResRoute from "./components/ResRoute";
 
-const Nav = (props: any) => {
+const Nav = ({ history, currentUser }) => {
   return (
     <Flex>
       <Box>
         <Heading
-          onClick={() => props.history.push("/dashboard")}
+          onClick={() => history.push("/dashboard")}
           size="xl"
           fontFamily="Allan"
           cursor="pointer"
@@ -34,14 +36,27 @@ const Nav = (props: any) => {
         </Heading>
       </Box>
       <Spacer />
-      <Box>
-        <Button mr="1rem" onClick={() => props.history.push("/join")}>
-          Sign Up
-        </Button>
-        <Button mr="1rem" onClick={() => props.history.push("/login")}>
-          Log in
-        </Button>
-      </Box>
+      {currentUser ? (
+        // Signed In User
+        <Box>
+          <Button mr="1rem" onClick={() => history.push("/profile")}>
+            Profile
+          </Button>
+          <Button mr="1rem" onClick={() => history.push("/logout")}>
+            Log out
+          </Button>
+        </Box>
+      ) : (
+        // No user
+        <Box>
+          <Button mr="1rem" onClick={() => history.push("/join")}>
+            Sign Up
+          </Button>
+          <Button mr="1rem" onClick={() => history.push("/login")}>
+            Log in
+          </Button>
+        </Box>
+      )}
     </Flex>
   );
 };
@@ -80,24 +95,33 @@ const customTheme = extendTheme({
 
 const App = (props: any) => {
   const [state, setState] = useState({
-    currentUser: true,
+    currentUser: {
+      username: "flozender",
+      name: "Tayeeb Hasan",
+      token: "12345678",
+    },
   });
 
-  const { currentUser } = state;
+  let { currentUser } = state;
 
   return (
     <ChakraProvider theme={customTheme}>
       <Fonts />
       <Box textAlign="center" fontSize="xl" p={6} height="100vh">
-        <Nav history={props.history} />
+        <Nav history={props.history} currentUser={currentUser} />
         <Switch>
           <Route exact path="/" component={Splash} />
           <Route exact path="/join" component={SignUp} />
           <Route exact path="/login" component={Login} />
-          <Route
-            exact
+          <ResRoute
             path="/dashboard"
-            render={() => (!currentUser ? <Redirect to="/" /> : <></>)}
+            currentUser={currentUser}
+            component={<></>}
+          />
+          <ResRoute
+            path="/profile"
+            currentUser={currentUser}
+            component={<Profile currentUser={currentUser} />}
           />
         </Switch>
       </Box>
