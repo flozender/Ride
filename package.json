@@ -9,6 +9,6 @@
     "client": "cd client && yarn start",
     "server": "cd server && nodemon",
     "dev": "yarn client & yarn server",
-    "start": "yarn start"
+    "start": "nodemon"
   }
 }

@@ -18,4 +18,18 @@ module.exports = (app) => {
     }
   })
 
+  app.post('/pool/request/:rideId', async(req, res) => {
+    try {
+      let rideId = req.params.rideId;
+      let username = req.token_data.data.username;
+
+      let data = await loopController.createRequest(rideId, username);
+      res.send(data);
+    } catch (error) {
+      res.status(400).send({
+        error: JSON.stringify(error)
+      });
+    }
+  })
+
 }
