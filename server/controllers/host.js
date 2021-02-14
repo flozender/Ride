@@ -16,7 +16,7 @@ exports.createTrip = async (data) => {
 
 exports.getAllTripsOfUser = async (username) => {
   try {
-    let query = `SELECT H.capacity, H.origin, H.destination, H.when,
+    let query = `SELECT H.id AS rideId, H.capacity, H.origin, H.destination, H.when,
     H.passengers, U.name, U.email, U.phone,
     CASE WHEN H.when < current_timestamp THEN 1
     ELSE 0 END AS isCompleted

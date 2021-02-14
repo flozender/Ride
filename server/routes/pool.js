@@ -9,7 +9,7 @@ module.exports = (app) => {
       let body = Object.assign({}, req.body);
       body.username = req.token_data.data.username;
 
-      let data = await loopController.getTripsForLoop(body);
+      let data = await loopController.getTripsForPool(body);
       res.send(data);
     } catch (error) {
       res.status(400).send({
