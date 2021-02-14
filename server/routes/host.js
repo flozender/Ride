@@ -34,6 +34,7 @@ module.exports = (app) => {
 
   app.post('/host/passenger', async(req, res) => {
     try {
+      console.log(req.body)
       let body = Object.assign({}, req.body);
       let data = await passengerController.acceptRejectPassenger(body);
 

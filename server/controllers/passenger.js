@@ -5,15 +5,15 @@ exports.acceptRejectPassenger = async (data) => {
     let query = ``;
     let response = {};
     if (data.status == 1) {
-      query = `INSERT INTO passengers (rideId, username, status) VALUES ($1,$2,$3)`;
-      await db.query(query, [data.rideId, data.username, data.status]);
+      query = `INSERT INTO passengers (rideId, username, status) VALUES ($1,$2,1)`;
+      await db.query(query, [data.rideid, data.username]);
       response = {
         success: true,
         message: "Accepted Request"
       }
     } else {
       query = `UPDATE requests SET status = 2 WHERE id=$2`;
-      await db.query(query, [data.requestId]);
+      await db.query(query, [data.requestid]);
       response = {
         success: true,
         message: "Rejected Request"
