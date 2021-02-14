@@ -23,7 +23,7 @@ module.exports = (app) => {
     try {
       let username = req.token_data.data.username;
 
-      let data = await hostController.getAllTripsOfUser(username);
+      let data = await hostController.getAllTripsOfHost(username);
       res.send(data)
     } catch (error) {
       res.status(400).send({
