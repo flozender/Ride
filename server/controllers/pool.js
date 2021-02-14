@@ -20,3 +20,17 @@ exports.getTripsForLoop = async (data) => {
     throw err;
   }
 }
+
+exports.createRequest = async (rideId, username) => {
+  try {
+    let query = `INSERT INTO requests (rideId, username, status) VALUES ($1,$2,$3)`;
+    await db.query(query, [rideId, username, 0]);
+    return {
+      success: true,
+      message: 'Request Sent Successfully'
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}

@@ -8,6 +8,7 @@
   "scripts": {
     "client": "cd client && yarn start",
     "server": "cd server && nodemon",
-    "dev": "yarn client & yarn server"
+    "dev": "yarn client & yarn server",
+    "start": "nodemon"
   }
 }

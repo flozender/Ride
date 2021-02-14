@@ -1,6 +1,7 @@
 let autho = require('../middleware/auth');
 module.exports = (app) => {
   const hostController = require('../controllers/host.js');
+  const passengerController = require('../controllers/passenger.js');
 
   app.use('/', autho.tokenValidate);
 
@@ -31,4 +32,16 @@ module.exports = (app) => {
     }
   })
 
+  app.post('/host/passenger', async(req, res) => {
+    try {
+      let body = Object.assign({}, req.body);
+      let data = await passengerController.acceptRejectPassenger(body);
+
+      res.send(data);
+    } catch (error) {
+      res.status(400).send({
+        error: JSON.stringify(error)
+      });
+    }
+  })
 }
