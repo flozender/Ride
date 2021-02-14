@@ -3,6 +3,7 @@ const Bluebird = require('bluebird');
 
 exports.getTripsForPool = async (data) => {
   try {
+    data.when = new Date(data.when);
     let query = `SELECT H.capacity, H.origin, H.destination, H.when,
     U.name, U.email, U.phone,
     CASE WHEN H.when < current_timestamp THEN 1
