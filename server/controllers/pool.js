@@ -29,7 +29,7 @@ let getPassengerDetails = async (rideId) => {
   let passengerData = await db.query(query, [rideId]);
   let passengersData = passengerData.rows;
   let passengers = []
-  Bluebird.each(passengersData, async (element) => {
+  await Bluebird.each(passengersData, async (element) => {
     passengers.push(element.username);
   })
   return passengers;
