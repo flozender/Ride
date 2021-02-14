@@ -6,8 +6,7 @@ let url;
 if (process.env.NODE_ENV === "production") {
   url = "https://ride-app-mlh.herokuapp.com";
 } else {
-  url = "https://ride-app-mlh.herokuapp.com";
-  //   url = "http://localhost:5000";
+  url = "http://localhost:5000";
 }
 
 const fetchApi = fetchAbsolute(fetch)(url);
