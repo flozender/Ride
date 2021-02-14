@@ -10,6 +10,6 @@
     "server": "cd server && nodemon",
     "dev": "yarn client & yarn server",
     "start": "nodemon",
-    "build": "cd client && yarn build"
+    "build": "cd client && yarn && yarn build"
   }
 }
