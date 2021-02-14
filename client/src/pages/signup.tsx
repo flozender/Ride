@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
-import fetch from "node-fetch";
+import fetchApi from "../components/fetch-custom";
 import {
   Button,
   Heading,
@@ -63,7 +63,7 @@ const SignUp = (props: any) => {
     } else {
       const body = state;
 
-      fetch("/signUp", {
+      fetchApi("/signUp", {
         method: "post",
         body: JSON.stringify(body),
         headers: {

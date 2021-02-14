@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
-import fetch from "node-fetch";
+import fetchApi from "../components/fetch-custom";
+
 import {
   Heading,
   Flex,
@@ -82,7 +83,7 @@ const Dashboard = (props: any) => {
         return;
       }
 
-      fetch(`/trip`, {
+      fetchApi(`/trip`, {
         method: "post",
         body: JSON.stringify(state),
         headers: {
@@ -132,7 +133,7 @@ const Dashboard = (props: any) => {
       setLoading(true);
       onOpen();
 
-      fetch(`/pool/trips`, {
+      fetchApi(`/pool/trips`, {
         method: "post",
         body: JSON.stringify(state),
         headers: {
@@ -301,7 +302,7 @@ const RequestCard = ({ ride, currentUser }) => {
   const toast = useToast();
 
   const handleSubmit = () => {
-    fetch(`/pool/request/${rideid}`, {
+    fetchApi(`/pool/request/${rideid}`, {
       method: "post",
       body: JSON.stringify(ride),
       headers: {
