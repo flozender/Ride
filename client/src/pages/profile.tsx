@@ -20,8 +20,8 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  useDisclosure,
   Modal,
+  useDisclosure,
   Tooltip,
   AvatarGroup,
   Box,
@@ -71,7 +71,7 @@ const Profile = (props: any) => {
   const [loading, setLoading] = useState(true);
   const [state, setState] = useState(null);
   const { currentUser, history } = props;
-  const [page, setPage] = useState("Profile");
+  const [page, setPage] = useState("Pools");
   useEffect(() => {
     fetch(`/profile/${currentUser.username}`, {
       method: "get",
@@ -111,12 +111,12 @@ const Profile = (props: any) => {
         justifyContent="center"
       >
         <NavItem text="Profile" setPage={setPage} page={page} />
-        <NavItem text="Rides" setPage={setPage} page={page} />
+        <NavItem text="Pools" setPage={setPage} page={page} />
         <NavItem text="Hosts" setPage={setPage} page={page} />
       </Flex>
       {/* Profile data */}
       {page === "Profile" ? <ProfilePage {...state} page={page} /> : null}
-      {page === "Rides" ? (
+      {page === "Pools" ? (
         <RidesPage {...state} page={page} currentUser={currentUser} />
       ) : null}
       {page === "Hosts" ? (
@@ -160,110 +160,33 @@ const ProfilePage = (props: any) => {
 };
 
 const RidesPage = (props: any) => {
-  const rides = [
-    {
-      rideId: "#2525",
-      status: "pending",
-      origin: "OH - Ohio",
-      destination: "KS - Kansas",
-      when: "2021-12-03",
-      host: {},
-    },
-    {
-      rideId: "#7721",
-      status: "accepted",
-      origin: "FL - Florida",
-      destination: "TX - Texas",
-      when: "2021-12-03",
-      host: {
-        username: "Jethro",
-        name: "Krishna Boyapati",
-        phone: "882924414",
-        passengers: [
-          "Christian Nwamba",
-          "Ryan Florence",
-          "Segun Adebayo",
-          "Kent Dodds",
-          "Prosper Otemuyiwa",
-        ],
-      },
-    },
-    {
-      rideId: "#7721",
-      status: "accepted",
-      origin: "FL - Florida",
-      destination: "TX - Texas",
-      when: "2021-12-03",
-      host: {
-        username: "Jethro",
-        name: "Krishna",
-        phone: "882924414",
-        passengers: [
-          "Christian Nwamba",
-          "Ryan Florence",
-          "Segun Adebayo",
-          "Kent Dodds",
-          "Prosper Otemuyiwa",
-        ],
-      },
-    },
-    {
-      rideId: "#7721",
-      status: "accepted",
-      origin: "FL - Florida",
-      destination: "TX - Texas",
-      when: "2021-12-03",
-      host: {
-        username: "Jethro",
-        name: "Krishna",
-        phone: "882924414",
-        passengers: [
-          "Christian Nwamba",
-          "Ryan Florence",
-          "Segun Adebayo",
-          "Kent Dodds",
-          "Prosper Otemuyiwa",
-        ],
-      },
-    },
-    {
-      rideId: "#7721",
-      status: "accepted",
-      origin: "FL - Florida",
-      destination: "TX - Texas",
-      when: "2021-12-03",
-      host: {
-        username: "Jethro",
-        name: "Krishna",
-        phone: "882924414",
-        passengers: [
-          "Christian Nwamba",
-          "Ryan Florence",
-          "Segun Adebayo",
-          "Kent Dodds",
-          "Prosper Otemuyiwa",
-        ],
-      },
-    },
-    {
-      rideId: "#7721",
-      status: "rejected",
-      origin: "FL - Florida",
-      destination: "TX - Texas",
-      when: "2021-12-03",
-      host: {},
-    },
-    {
-      rideId: "#7721",
-      status: "rejected",
-      origin: "FL - Florida",
-      destination: "TX - Texas",
-      when: "2021-12-03",
-      host: {},
-    },
-  ];
-  const { page, currentUser } = props;
+  const [rides, setRides] = useState([]);
+  const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    setLoading(true);
+    fetch(`/pools`, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (!json.success) throw Error(json.message);
+        console.log(json);
+        setRides([...json.pools]);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  }, []);
+
+  const { page, currentUser } = props;
+  console.log(loading);
   return (
     <Flex
       textAlign="center"
@@ -276,152 +199,75 @@ const RidesPage = (props: any) => {
       justifyContent="flex-start"
     >
       <Flex flexDirection="row" alignItems="center" mb={5}>
-        <Heading size="lg">Ride Requests</Heading>
+        <Heading size="lg">Pool Requests</Heading>
       </Flex>
       <Divider mb={5} />
-      <VStack overflow="auto">
-        {rides.map((ride, i) => {
-          let color = null;
-          if (ride.status === "accepted") {
-            color = "green";
-          } else if (ride.status === "rejected") {
-            color = "red";
-          }
-          return (
-            <Card
-              rideId={ride.rideId}
-              status={ride.status}
-              origin={ride.origin}
-              destination={ride.destination}
-              color={color}
-              key={i}
-              ride={ride}
-              page={page}
-              currentUser={currentUser}
-            />
-          );
-        })}
-      </VStack>
+      {loading ? (
+        <Spinner size="xl" margin="auto" color="green" />
+      ) : (
+        <VStack overflow="auto">
+          {rides.map((ride, i) => {
+            let color = null;
+            if (ride.status === "accepted") {
+              color = "green";
+            } else if (ride.status === "rejected") {
+              color = "red";
+            }
+            return (
+              <Card
+                rideid={ride.rideid}
+                status={ride.status}
+                origin={ride.origin}
+                destination={ride.destination}
+                color={color}
+                key={i}
+                ride={ride}
+                page={page}
+                currentUser={currentUser}
+              />
+            );
+          })}
+        </VStack>
+      )}
     </Flex>
   );
 };
 
 const HostsPage = (props: any) => {
-  const rides = [
-    {
-      rideId: "#2525",
-      origin: "OH - Ohio",
-      destination: "KS - Kansas",
-      requests: [
-        {
-          poolId: "PL441",
-          username: "flozender",
-          datetime: "2021-04-30",
-          status: "pending",
-        },
-      ],
-      capacity: 3,
-      passengers: ["at", "ab", "ac"],
-      isCompleted: 0,
-      status: "",
-      when: "2010-03-09",
-    },
-    {
-      rideId: "#7721",
-      origin: "FL - Florida",
-      destination: "TX - Texas",
-      requests: [],
-      capacity: 6,
-      passengers: ["at", "ab", "ac"],
-      isCompleted: 1,
-      status: "",
-      when: "2010-03-09",
-    },
-    {
-      rideId: "#8727",
-      origin: "FL - Florida",
-      destination: "TX - Texas",
-      requests: [
-        {
-          poolId: "PL441",
-          username: "Flozender",
-          datetime: "2021-04-30",
-          status: "pending",
-        },
-        {
-          poolId: "PL241",
-          username: "Jethro",
-          datetime: "2021-04-30",
-          status: "pending",
-        },
-        {
-          poolId: "PX041",
-          username: "Steve",
-          datetime: "2021-04-30",
-          status: "pending",
-        },
-        {
-          poolId: "PX041",
-          username: "John",
-          datetime: "2021-04-30",
-          status: "rejected",
-        },
-        {
-          poolId: "PX041",
-          username: "Caleb",
-          datetime: "2021-04-30",
-          status: "pending",
-        },
-        {
-          poolId: "PX041",
-          username: "Caleb",
-          datetime: "2021-04-30",
-          status: "pending",
-        },
-        {
-          poolId: "PX041",
-          username: "Caleb",
-          datetime: "2021-04-30",
-          status: "pending",
-        },
-        {
-          poolId: "PX041",
-          username: "Caleb",
-          datetime: "2021-04-30",
-          status: "pending",
-        },
-        {
-          poolId: "PX041",
-          username: "Caleb",
-          datetime: "2021-04-30",
-          status: "pending",
-        },
-        {
-          poolId: "PX041",
-          username: "Caleb",
-          datetime: "2021-04-30",
-          status: "pending",
-        },
-      ],
-      capacity: 10,
-      passengers: ["at", "ab", "ac"],
-      isCompleted: 0,
-      status: "",
-      when: "2010-03-09",
-    },
-    {
-      rideId: "#9521",
-      origin: "KS - Kansas",
-      destination: "TX - Texas",
-      requests: [],
-      capacity: 10,
-      passengers: ["at", "ab", "ac"],
-      isCompleted: 0,
-      status: "",
-      when: "2010-03-09",
-    },
-  ];
   const { page, currentUser } = props;
+  const [loading, setLoading] = useState(true);
+  const toast = useToast();
+  const [rides, setRides] = useState([]);
+  useEffect(() => {
+    fetch(`/host/trips`, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (!json.success) throw Error(json.message);
+        console.log(json);
+        setRides([...json.trips]);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast({
+          position: "bottom-left",
+          title: "Failed to load trips",
+          description: err.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        setLoading(false);
+      });
+  }, [toast, currentUser.token]);
+  console.log(rides);
+
   return (
     <Flex
       textAlign="center"
@@ -437,45 +283,57 @@ const HostsPage = (props: any) => {
         <Heading size="lg">Your Trips</Heading>
       </Flex>
       <Divider mb={5} />
-      <VStack overflow="auto">
-        {rides.map((ride, i) => {
-          let color = "purple";
-          let status = "active";
-          if (ride.requests.length > 0) {
-            color = "green";
-            status = "requests";
-          }
-          if (ride.passengers.length >= ride.capacity) {
-            color = "orange";
-            status = "full";
-          }
-          if (ride.isCompleted) {
-            color = "red";
-            status = "completed";
-          }
+      {loading || !rides.length ? (
+        <Spinner size="xl" color="green" m="auto" />
+      ) : (
+        <VStack overflow="auto">
+          {console.log(rides)}
+          {rides.map((ride, i) => {
+            let color = "purple";
+            let status = "active";
+            let activeRequests = ride.requests.filter((ride) => {
+              return ride.status === "pending";
+            });
+            if (activeRequests.length > 0) {
+              color = "green";
+              status = "requests";
+            }
 
-          ride.status = status;
+            if (ride.passengers.length >= parseInt(ride.capacity)) {
+              color = "orange";
+              status = "full";
+            }
 
-          return (
-            <Card
-              rideId={ride.rideId}
-              status={status}
-              origin={ride.origin}
-              destination={ride.destination}
-              color={color}
-              ride={ride}
-              page={page}
-              currentUser={currentUser}
-            />
-          );
-        })}
-      </VStack>
+            if (!ride.iscompleted) {
+              color = "red";
+              status = "completed";
+            }
+
+            ride.status = status;
+            ride.requests = activeRequests;
+
+            return (
+              <Card
+                rideid={ride.rideid}
+                status={status}
+                origin={ride.origin}
+                destination={ride.destination}
+                color={color}
+                ride={ride}
+                page={page}
+                currentUser={currentUser}
+                key={i}
+              />
+            );
+          })}
+        </VStack>
+      )}
     </Flex>
   );
 };
 
 const Card = ({
-  rideId,
+  rideid,
   status,
   origin,
   destination,
@@ -500,13 +358,13 @@ const Card = ({
         cursor="pointer"
         bg="gray.900"
       >
-        <Heading>{rideId}</Heading>
+        <Heading>{`#${rideid.slice(-4)}`}</Heading>
         <Text ml={5}>{`${origin} to ${destination}`}</Text>
         <Badge p={1} width="6rem" colorScheme={color}>
           {status}
         </Badge>
       </Flex>
-      {page === "Rides" ? (
+      {page === "Pools" ? (
         <RideModal
           isOpen={isOpen}
           onClose={onClose}
@@ -533,7 +391,7 @@ const TooltipAvatar = (props: any) => (
 );
 
 const RideModal = ({ isOpen, onClose, ride, color }) => {
-  const { rideId, status, origin, destination, host, when } = ride;
+  const { rideid, status, origin, destination, host, when, passengers } = ride;
   return (
     <Modal isOpen={isOpen} onClose={onClose} trapFocus={false}>
       <ModalOverlay />
@@ -541,7 +399,7 @@ const RideModal = ({ isOpen, onClose, ride, color }) => {
         <ModalHeader>
           <Flex justifyContent="space-between">
             <Text>Ride Details</Text>
-            <Text>{when}</Text>
+            <Text>{when.substring(0, 10)}</Text>
           </Flex>
         </ModalHeader>
         <ModalBody>
@@ -551,7 +409,7 @@ const RideModal = ({ isOpen, onClose, ride, color }) => {
             justifyContent="space-between"
             mb={4}
           >
-            <Heading size="2xl">{rideId}</Heading>
+            <Heading size="2xl">{`#${rideid.slice(-4)}`}</Heading>
             <Box>
               <Badge p={2} colorScheme={color}>
                 {status}
@@ -610,7 +468,7 @@ const RideModal = ({ isOpen, onClose, ride, color }) => {
                 </Flex>
                 <Divider orientation="horizontal" mb={4} />
                 {/* Passengers Section */}
-                <PassengerCard host={host} ride={host} />
+                <PassengerCard host={host} passengers={passengers} />
 
                 <Flex
                   height="max"
@@ -666,7 +524,7 @@ const RideModal = ({ isOpen, onClose, ride, color }) => {
   );
 };
 
-const PassengerCard = ({ host, ride, ...rest }) => {
+const PassengerCard = ({ host, passengers, ...rest }) => {
   return (
     <Flex bg="gray.800" pt={2} height="60%" rounded="md" {...rest}>
       <Flex flexDirection="column" mb={3}>
@@ -675,7 +533,7 @@ const PassengerCard = ({ host, ride, ...rest }) => {
         </Heading>
         <AvatarGroup size="md" max={4}>
           <TooltipAvatar name={host.name} />
-          {ride.passengers.map((name, i) => {
+          {passengers.map((name, i) => {
             return <TooltipAvatar name={name} key={i} />;
           })}
         </AvatarGroup>
@@ -684,7 +542,69 @@ const PassengerCard = ({ host, ride, ...rest }) => {
   );
 };
 
-const RequestCard = ({ username }) => {
+const RequestCard = ({ request, currentUser, rideid }) => {
+  const toast = useToast();
+  const [accepting, setAccepting] = useState(false);
+  const [rejecting, setRejecting] = useState(false);
+  const { username, requestid, name } = request;
+
+  const handleSubmit = (decision) => {
+    if (decision === 1) {
+      setAccepting(true);
+    } else {
+      setRejecting(true);
+    }
+    let body = {
+      status: decision,
+      rideid: rideid,
+      requestid: requestid,
+      username: username,
+    };
+    fetch(`/host/passenger`, {
+      method: "post",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUser.token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (!json.success) throw Error(json.message);
+        if (decision === 1) {
+          setAccepting(false);
+          toast({
+            position: "bottom-left",
+            title: "Request Accepted!",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+        } else {
+          toast({
+            position: "bottom-left",
+            title: "Request Rejected.",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+          setRejecting(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setAccepting(false);
+        setRejecting(false);
+        toast({
+          position: "bottom-left",
+          title: "Failed to request pool",
+          description: err.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      });
+  };
   return (
     <Flex
       p={4}
@@ -697,25 +617,31 @@ const RequestCard = ({ username }) => {
       bg="gray.900"
       mb={2}
     >
-      <Heading size="md">{username}</Heading>
+      <Heading size="md">{name.split(" ")[0]}</Heading>
       <HStack spacing={3}>
         <IconButton
           variant="solid"
           colorScheme="green"
           aria-label="Accept Request"
           fontSize="20px"
-          isLoading={false}
           size="sm"
           icon={<CheckIcon />}
+          isLoading={accepting}
+          onClick={() => {
+            handleSubmit(1);
+          }}
         />
         <IconButton
           variant="solid"
           colorScheme="red"
           aria-label="Reject Request"
           fontSize="20px"
-          isLoading={false}
           size="sm"
           icon={<CloseIcon />}
+          isLoading={rejecting}
+          onClick={() => {
+            handleSubmit(2);
+          }}
         />
       </HStack>
     </Flex>
@@ -723,7 +649,7 @@ const RequestCard = ({ username }) => {
 };
 
 const HostModal = ({ isOpen, onClose, ride, color, currentUser }) => {
-  const { rideId, origin, destination, when, status } = ride;
+  const { rideid, origin, destination, when, status, passengers } = ride;
   return (
     <Modal isOpen={isOpen} onClose={onClose} trapFocus={false}>
       <ModalOverlay />
@@ -731,7 +657,7 @@ const HostModal = ({ isOpen, onClose, ride, color, currentUser }) => {
         <ModalHeader>
           <Flex justifyContent="space-between">
             <Text>Ride Details</Text>
-            <Text>{when}</Text>
+            <Text>{when.substring(0, 10)}</Text>
           </Flex>
         </ModalHeader>
         <ModalBody>
@@ -741,7 +667,7 @@ const HostModal = ({ isOpen, onClose, ride, color, currentUser }) => {
             justifyContent="space-between"
             mb={4}
           >
-            <Heading size="2xl">{rideId}</Heading>
+            <Heading size="2xl">{`#${rideid.slice(-4)}`}</Heading>
             <Box>
               <Badge p={2} colorScheme={color}>
                 {status}
@@ -787,9 +713,18 @@ const HostModal = ({ isOpen, onClose, ride, color, currentUser }) => {
               overflow="auto"
               flexDirection="column"
             >
+              {console.log(ride)}
               {ride.requests.map((request, i) => {
-                if (request.status === "rejected") return;
-                return <RequestCard username={request.username} key={i} />;
+                if (request.status === "accepted") return null;
+                if (request.status === "rejected") return null;
+                return (
+                  <RequestCard
+                    request={request}
+                    key={i}
+                    currentUser={currentUser}
+                    rideid={ride.rideid}
+                  />
+                );
               })}
             </Flex>
           ) : (
@@ -806,7 +741,7 @@ const HostModal = ({ isOpen, onClose, ride, color, currentUser }) => {
                 mb={4}
               >{`Seats ${ride.passengers.length}/${ride.capacity}`}</Heading>
               <Divider orientation="horizontal" />
-              <PassengerCard host={currentUser} ride={ride} />
+              <PassengerCard host={currentUser} passengers={passengers} />
             </Flex>
           )}
         </ModalBody>

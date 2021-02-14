@@ -56,7 +56,7 @@ const App = (props: any) => {
             component={<Dashboard currentUser={currentUser} />}
           />
           <ResRoute
-            path="/profile"
+            path="/rides"
             currentUser={currentUser}
             component={<Profile currentUser={currentUser} />}
           />
@@ -116,8 +116,8 @@ const Nav = ({ history, currentUser }) => {
       {currentUser ? (
         // Signed In User
         <Box>
-          <Button mr="1rem" onClick={() => history.push("/profile")}>
-            Profile
+          <Button mr="1rem" onClick={() => history.push("/rides")}>
+            Your Rides
           </Button>
           <Button mr="1rem" onClick={() => history.push("/logout")}>
             Log out
