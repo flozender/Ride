@@ -1,4 +1,5 @@
 const db = require('../db/database.js');
+const Bluebird = require('bluebird');
 
 exports.getTripsForPool = async (data) => {
   try {
@@ -14,6 +15,57 @@ exports.getTripsForPool = async (data) => {
     return {
       success: true,
       trips: trips.rows
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+let getPassengerDetails = async (rideId) => {
+  let query = `SELECT P.username
+    FROM passengers P
+    WHERE P.rideId = $1`;
+  let passengerData = await db.query(query, [rideId]);
+  let passengersData = passengerData.rows;
+  let passengers = []
+  Bluebird.each(passengersData, async (element) => {
+    passengers.push(element.username);
+  })
+  return passengers;
+}
+
+let getHostDetails = async (rideId) => {
+  let query = `SELECT U.name, U.username, U.phone, U.email
+    FROM hosts H
+    LEFT JOIN users U ON U.username = H.username
+    WHERE H.id = $1`;
+  let hostData = await db.query(query, [rideId]);
+  return hostData.rows[0];
+}
+
+exports.getAllPools = async (username) => {
+  try {
+    let query = `SELECT H.id AS rideId, H.capacity, H.origin, H.destination, H.when,
+    CASE WHEN H.when < current_timestamp THEN 1
+    ELSE 0 END AS isCompleted,
+    CASE WHEN R.status = 1 THEN 'accepted'
+    	 WHEN R.status = 2 THEN 'rejected'
+    	 ELSE 'pending' END AS status
+    FROM hosts H
+    LEFT JOIN requests R ON R.rideId = H.id
+    WHERE R.username = $1`;
+    let poolsData = await db.query(query, [username]);
+    let pools = Object.assign([], poolsData.rows);
+    await Bluebird.each(pools, async (pool) => {
+      let hostData = await getHostDetails(pool.rideid);
+      pool.host = Object.assign({}, hostData);
+      let passengersData = await getPassengerDetails(pool.rideid);
+      pool.passengers = Object.assign([], passengersData);
+    })
+    return {
+      success: true,
+      pools
     }
   } catch (err) {
     console.log(err);
