@@ -29,14 +29,15 @@ let getRequestsData = async (rideId) => {
 }
 
 let getPassengerDetails = async (rideId) => {
-  let query = `SELECT P.username
+  let query = `SELECT U.name
     FROM passengers P
+    LEFT JOIN users U ON U.username = P.username
     WHERE P.rideId = $1`;
   let passengerData = await db.query(query, [rideId]);
   let passengersData = passengerData.rows;
   let passengers = []
   await Bluebird.each(passengersData, async (element) => {
-    passengers.push(element.username);
+    passengers.push(element.name);
   })
   return passengers;
 }
