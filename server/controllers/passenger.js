@@ -7,12 +7,13 @@ exports.acceptRejectPassenger = async (data) => {
     if (data.status == 1) {
       query = `INSERT INTO passengers (rideId, username, status) VALUES ($1,$2,1)`;
       await db.query(query, [data.rideid, data.username]);
+      await db.query(`UPDATE requests SET status = 1 WHERE id=$1`, [data.requestid])
       response = {
         success: true,
         message: "Accepted Request"
       }
     } else {
-      query = `UPDATE requests SET status = 2 WHERE id=$2`;
+      query = `UPDATE requests SET status = 2 WHERE id=$1`;
       await db.query(query, [data.requestid]);
       response = {
         success: true,
