@@ -21,8 +21,8 @@ import {
 
 import { states } from "../us-states";
 
-const Picker = ({ text, name, onChange }) => (
-  <Flex flexDirection="column" alignItems="flex-start" mb={2}>
+const Picker = ({ text, name, onChange, ...rest }) => (
+  <Flex flexDirection="column" alignItems="flex-start" mb={2} {...rest}>
     <Heading mb={6}>{text}</Heading>
     <Select
       width="15em"
@@ -120,7 +120,7 @@ const Dashboard = (props: any) => {
   return (
     <Flex
       height="80vh"
-      width="75vw"
+      width="70vw"
       mt={8}
       p={8}
       margin="auto"
@@ -171,6 +171,7 @@ const Dashboard = (props: any) => {
             text="Destination"
             name="destination"
             onChange={handleChange}
+            alignItems="flex-start"
           />
         </Flex>
         {/* Bottom Flex */}
