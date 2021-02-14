@@ -12,8 +12,8 @@ exports.acceptRejectPassenger = async (data) => {
         message: "Accepted Request"
       }
     } else {
-      query = `UPDATE requests SET status = $1 WHERE id=$2`;
-      await db.query(query, [data.status, data.requestId]);
+      query = `UPDATE requests SET status = 2 WHERE id=$2`;
+      await db.query(query, [data.requestId]);
       response = {
         success: true,
         message: "Rejected Request"
