@@ -8,6 +8,17 @@ Our inspiration was about difficulties we faced as students and travel was alway
 
 [Watch the video demo here](https://youtu.be/50CTwT4P6dY)
 
+# Try it out
+
+Clone the repo and run
+
+```
+yarn setup
+yarn dev
+```
+
+in the root folder. The app will run on `localhost:3000`
+
 # How we built it
 
 We built this product using node.js, express, CockroachDB, and React for the frontend.
