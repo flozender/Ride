@@ -25,10 +25,6 @@ import Fonts from "./components/Fonts";
 import ResRoute from "./components/ResRoute";
 
 const App = (props: any) => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  if (colorMode === "light") {
-    toggleColorMode();
-  }
   let user = JSON.parse(localStorage.getItem("ride-user"));
   if (!user) user = null;
   const [currentUser, setCurrentUser] = useState(user);
@@ -99,7 +95,7 @@ const customTheme = extendTheme({
       baseStyle: {},
     },
   },
-  initialColorMode: "dark",
+  initialColorMode: "light",
   useSystemColorMode: false,
 });
 
