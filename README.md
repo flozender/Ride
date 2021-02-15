@@ -10,14 +10,15 @@ Our inspiration was about difficulties we faced as students and travel was alway
 
 # Try it out
 
-Clone the repo and run
-
-```
-yarn setup
-yarn dev
-```
-
-in the root folder. The app will run on `localhost:3000`
+- Clone the repo
+- Create a directory `/server/config/` and add `cc-ca.crt` from CockroachCluster. Also add `id_rsa` in the same directory.
+- Create a `.env` in the `/server/` directory and add `DB_PASSWORD=<%DB_PASSWORD_HERE%>`
+- Run
+  ```
+  yarn setup
+  yarn dev
+  ```
+  in the root folder. The app will run on `localhost:3000`
 
 # How we built it
 
