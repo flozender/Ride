@@ -94,7 +94,7 @@ const customTheme = extendTheme({
       baseStyle: {},
     },
   },
-  initialColorMode: "dark",
+  initialColorMode: "light",
   useSystemColorMode: false,
 });
 

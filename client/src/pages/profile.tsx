@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import fetch from "node-fetch";
+import fetchApi from "../components/fetch-custom";
 import { withRouter } from "react-router-dom";
 import {
   Button,
@@ -73,7 +73,7 @@ const Profile = (props: any) => {
   const { currentUser, history } = props;
   const [page, setPage] = useState("Pools");
   useEffect(() => {
-    fetch(`/profile/${currentUser.username}`, {
+    fetchApi(`/profile/${currentUser.username}`, {
       method: "get",
       headers: {
         "Content-Type": "application/json",
@@ -165,7 +165,7 @@ const RidesPage = (props: any) => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/pools`, {
+    fetchApi(`/pools`, {
       method: "get",
       headers: {
         "Content-Type": "application/json",
@@ -239,7 +239,7 @@ const HostsPage = (props: any) => {
   const toast = useToast();
   const [rides, setRides] = useState([]);
   useEffect(() => {
-    fetch(`/host/trips`, {
+    fetchApi(`/host/trips`, {
       method: "get",
       headers: {
         "Content-Type": "application/json",
@@ -303,8 +303,8 @@ const HostsPage = (props: any) => {
               color = "orange";
               status = "full";
             }
-
-            if (!ride.iscompleted) {
+            console.log("RIDE", ride, ride.iscompleted);
+            if (ride.iscompleted === "1") {
               color = "red";
               status = "completed";
             }
@@ -560,7 +560,7 @@ const RequestCard = ({ request, currentUser, rideid }) => {
       requestid: requestid,
       username: username,
     };
-    fetch(`/host/passenger`, {
+    fetchApi(`/host/passenger`, {
       method: "post",
       body: JSON.stringify(body),
       headers: {

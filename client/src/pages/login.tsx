@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
+import fetchApi from "../components/fetch-custom";
 import {
   Button,
   Heading,
@@ -58,7 +59,7 @@ const Login = (props: any) => {
       setLoading(false);
     } else {
       const body = state;
-      fetch("/signIn", {
+      fetchApi("/signIn", {
         method: "post",
         body: JSON.stringify(body),
         headers: {
