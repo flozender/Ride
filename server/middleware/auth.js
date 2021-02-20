@@ -12,8 +12,6 @@ let fetchData = function (req, res) {
 module.exports = {
   tokenValidate: function (req, res, next) {
     let token = fetchData(req, res);
-
-    // console.log('auth_token for req---', token, req.path);
     if (token) {
       let decoded_data = {};
       let auth = false;

@@ -11,4 +11,5 @@ require('./routes/user.js')(app);
 require('./routes/host.js')(app);
 require('./routes/pool.js')(app);
 
-app.listen(5000,()=>console.log('Server @ port 5000'));
+app.listen(2002, () => console.log('Server @ port 2002'));
+module.exports = app;
