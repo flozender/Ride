@@ -2,8 +2,8 @@
   "name": "Ride",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/flozender/Ride",
-  "author": "Tayeeb Hasan <tayeeb.hasan@gmail.com>",
+  "repository": "https://github.com/JethroGibbsN/Ride",
+  "author": "Tayeeb Hasan <tayeeb.hasan@gmail.com>, Krishna Boyapati <boyapatikrishna99@gmail.com>",
   "license": "MIT",
   "scripts": {
     "client": "cd client && yarn start",
